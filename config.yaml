@@ -6,10 +6,10 @@ project:
   save_model: true
 
 data:
-  train_images_dir: data/train/images/
-  train_masks_dir: data/train/masks/
-  val_images_dir: data/val/images/
-  val_masks_dir: data/val/masks/
+  train_images_dir: D:\naki\Projects\IVP\roadnet_minimal\data\archive\train
+  train_masks_dir: D:\naki\Projects\IVP\roadnet_minimal\data\archive\train
+  val_images_dir: D:\naki\Projects\IVP\roadnet_minimal\data\archive\valid
+  val_masks_dir: D:\naki\Projects\IVP\roadnet_minimal\data\archive\valid
   image_size: 256
   batch_size: 8
   num_workers: 4
@@ -24,8 +24,9 @@ model:
   classes: 1
 
 train:
-  epochs: 50
-  learning_rate: 0.0001
+  epochs: 7
+  learning_rate: 0.00008
+  weight_decay: 0.0001 # Added weight decay
   early_stopping_patience: 10
   checkpoint_path: checkpoints/best_model.pth
   log_interval: 5

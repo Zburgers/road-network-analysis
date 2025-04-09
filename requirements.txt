@@ -1,4 +1,9 @@
-streamlit
-tensorflow
+torch>=2.0.0
+torchvision
 numpy
-opencv-python
+Pillow
+matplotlib
+scikit-learn
+PyYAML
+streamlit
+torchtext
