@@ -2,7 +2,7 @@
 
 import torch
 import numpy as np
-from sklearn.metrics import jaccard_score
+from sklearn.metrics import jaccard_score, precision_score, recall_score, f1_score
 
 def dice_score(pred, target):
     smooth = 1e-6
@@ -14,8 +14,13 @@ def dice_score(pred, target):
 
 def evaluate_model(model, dataloader, device):
     model.eval()
-    dice_scores = []
-    iou_scores = []
+    metrics = {
+        'dice': [],
+        'iou': [],
+        'precision': [],
+        'recall': [],
+        'f1': []
+    }
 
     with torch.no_grad():
         for images, masks in dataloader:
@@ -24,13 +29,27 @@ def evaluate_model(model, dataloader, device):
             preds = torch.sigmoid(outputs)
             preds = (preds > 0.5).float()
 
+            # Calculate metrics
             dice = dice_score(preds, masks)
-            dice_scores.append(dice.item())
+            metrics['dice'].append(dice.item())
 
-            iou = jaccard_score(masks.cpu().numpy().flatten(), preds.cpu().numpy().flatten())
-            iou_scores.append(iou)
+            # Convert to numpy for sklearn metrics
+            preds_np = preds.cpu().numpy().flatten()
+            masks_np = masks.cpu().numpy().flatten()
 
-    avg_dice = np.mean(dice_scores)
-    avg_iou = np.mean(iou_scores)
-    print(f"📐 Dice Score: {avg_dice:.4f}, IoU Score: {avg_iou:.4f}")
-    return avg_dice
+            # Calculate other metrics
+            metrics['iou'].append(jaccard_score(masks_np, preds_np))
+            metrics['precision'].append(precision_score(masks_np, preds_np))
+            metrics['recall'].append(recall_score(masks_np, preds_np))
+            metrics['f1'].append(f1_score(masks_np, preds_np))
+
+    # Calculate and print average metrics
+    avg_metrics = {k: np.mean(v) for k, v in metrics.items()}
+    print("\n📊 Model Performance Metrics:")
+    print(f"🎯 Dice Score: {avg_metrics['dice']:.4f}")
+    print(f"📐 IoU Score: {avg_metrics['iou']:.4f}")
+    print(f"🎯 Precision: {avg_metrics['precision']:.4f}")
+    print(f"🎯 Recall: {avg_metrics['recall']:.4f}")
+    print(f"🎯 F1 Score: {avg_metrics['f1']:.4f}")
+
+    return avg_metrics
