@@ -1,7 +1,7 @@
 # config.yaml
 
 project:
-  name: Road Extraction with DeepLabV3+
+  name: Road Extraction with UNet++
   output_dir: outputs/
   save_model: true
 
@@ -10,24 +10,25 @@ data:
   train_masks_dir: D:\naki\Projects\IVP\roadnet_minimal\data\archive\train
   val_images_dir: D:\naki\Projects\IVP\roadnet_minimal\data\archive\valid
   val_masks_dir: D:\naki\Projects\IVP\roadnet_minimal\data\archive\valid
-  image_size: 256
-  batch_size: 8
+  image_size: 512
+  batch_size: 4
   num_workers: 4
   augmentations: true
 
 model:
-  architecture: deeplabv3plus
-  encoder_name: resnet34
+  architecture: unetplusplus
+  encoder_name: efficientnet-b4
   encoder_weights: imagenet
   activation: sigmoid
   in_channels: 3
   classes: 1
 
 train:
-  epochs: 7
-  learning_rate: 0.00008
-  weight_decay: 0.0001 # Added weight decay
+  epochs: 50
+  learning_rate: 1e-4
+  weight_decay: 1e-5
   early_stopping_patience: 10
   checkpoint_path: checkpoints/best_model.pth
   log_interval: 5
   seed: 42
+  resume_training: false
