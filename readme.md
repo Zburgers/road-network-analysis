@@ -99,8 +99,7 @@ python main.py --mode evaluate
 
 ## Model Training
 
-The project supports two approaches to model training:
-
+The project supports two approaches to model training, the notebook approach is the sandbox and the main.py approach is the deployed version:
 ### 1. Notebook Approach (main.ipynb)
 - Interactive and educational
 - Step-by-step visualization
